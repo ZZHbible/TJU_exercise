@@ -95,7 +95,6 @@ def OrderField(info, venueNo):
         "VenueNo": venueNo,
         "OrderType": "Field"
     }
-    print(data)
     req = requests.post(url=url, json=data, headers=headers)
 
     content = json.loads(req.text)
@@ -105,21 +104,23 @@ def OrderField(info, venueNo):
 
 def send_post(infos, campus="北洋园"):
     venueNo = opt[campus]["venueNo"]
-    for info in infos:
-        res = OrderField(info, venueNo)
-        if res["type"] == 1:
-            print("succeed", info)
-            # break
-        print("failed", info)
+    now =  datetime.datetime.now()
+    while (datetime.datetime.now()-datetime.datetime(now.year, now.month, now.day, hour=21)).seconds < 60*30:
+        for info in infos:
+            res = OrderField(info, venueNo)
+            if res["type"] == 1:
+                print("succeed", info)
+                break
+            print("failed", info)
 
 
 def main():
     date = datetime.datetime.today() + datetime.timedelta(days=2)
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', type=str, default=str(date.month) + "." + str(date.day), help="日期 like 11.30")
-    parser.add_argument('--campus', type=str, default="卫津路体育场", help="校区体育场")
-    parser.add_argument('--sport', type=str, default="北网球场", help="活动")
-    parser.add_argument('--time', type=str, default="15", help="期望时间")
+    parser.add_argument('--campus', type=str, default="北洋园", help="校区体育场")
+    parser.add_argument('--sport', type=str, default="羽毛球", help="活动")
+    parser.add_argument('--time', type=str, default="15 16", help="期望时间")
     args = parser.parse_args()
 
     infos = get_infos(date=args.date, time_list=args.time, campus=args.campus, sports=args.sport)
@@ -128,7 +129,9 @@ def main():
     begin_time = datetime.datetime(now.year, now.month, now.day, hour=21)
 
     # t1=Thread(target=send_post,args=(infos, args.campus))
+    # t2=Thread(target=send_post,args=(infos, args.campus))
     # t1.start()
+    # t2.start()
 
     for i in range(10):
         threads.append(Timer(interval=(begin_time - now).seconds, function=send_post, args=(infos, args.campus)))
