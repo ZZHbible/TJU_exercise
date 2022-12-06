@@ -5,4 +5,4 @@
 ```shell
 python main.py --date=12.2 --time=15 --campus=北洋园 --sport=羽毛球 
 ```
---date 默认是今日+2，time默认15点，or "15 13 12"抢多个喜欢的时间段，campus默认北洋园，具体参考field.json, sport默认羽毛球
+--date 默认是今日+2，time默认15点，or "15 13 12"抢多个喜欢的时间段，campus默认北洋园，具体参考field.json, sport默认羽毛球,定时器默认开在晚上9点
